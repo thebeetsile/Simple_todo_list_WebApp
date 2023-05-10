@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-4">
+                <h1 class="text-center mb-4">To-Do List</h1>
+                <form id="add-task-form" class="mb-4">
+                    <div class="form-group">
+                        <label for="task-name">Task Name</label>
+                        <input type="text" name="task-name" id="task-name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-desc">Task Description</label>
+                        <textarea name="task-desc" id="task-desc" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </div>
+                </form>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Task Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-list">
+                        <!-- Tasks will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            // Load tasks when page is loaded
+            loadTasks();
+
+            // Handle form submission to add task
+            $('#add-task-form').submit((event) => {
+                event.preventDefault();
+                const taskName = $('#task-name').val();
+                const taskDesc = $('#task-desc').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/task',
+                    data: {
+                        name: taskName,
+                        description: taskDesc
+                    },
+                    success: () => {
+                        loadTasks();
+                        $('#add-task-form')[0].reset();
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+
+            // Handle clicking on complete button
+            $('body').on('click', '.complete-btn', function() {
+                const taskId = $(this).data('id');
+                $.ajax({
+                    type: 'PUT',
+                    url: `/api/task/${taskId}`,
+                    data: {
+                        completed: true
+                    },
+                    success: () => {
+                        loadTasks();
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+
+            // Handle clicking on delete button
+            $('body').on('click', '.delete-btn', function() {
+                const taskId = $(this).data('id');
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/api/task/${taskId}`,
+                    success: () => {
+                        loadTasks();
+                    },
+                    error: (error)
+                    });
+});
+        // Load all tasks from the server and display them in the table
+        function loadTasks() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/task',
+                success: (tasks) => {
+                    const taskList = $('#task-list');
+                    taskList.empty();
+                    tasks.forEach((task) => {
+                        let status = 'Incomplete';
+                        let statusClass = 'badge-danger';
+                        if (task.completed) {
+                            status = 'Complete';
+                            statusClass = 'badge-success';
+                        }
+                        taskList.append(`
+                            <tr>
+                                <td>${task.name}</td>
+                                <td>${task.description}</td>
+                                <td><span class="badge ${statusClass}">${status}</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-success complete-btn" data-id="${task._id}">Complete</button>
+                                    <button class="btn btn-sm btn-danger delete-btn" data-id="${task._id}">Delete</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        }
+    });
+</script>

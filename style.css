@@ -1,0 +1,55 @@
+body {
+    background-color: #f2f2f2;
+  }
+  
+  .container {
+    margin-top: 100px;
+  }
+  
+  .modal-body {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .task {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .task h3 {
+    margin: 0;
+    display: inline-block;
+  }
+  
+  .task .edit-btn,
+  .task .delete-btn {
+    float: right;
+  }
+  
+  .task .description {
+    margin-top: 10px;
+  }
+  
+  .task .description p {
+    margin: 0;
+  }
+  
+  .task .completed {
+    margin-top: 10px;
+  }
+  
+  .task .completed input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .task .completed label {
+    font-weight: normal;
+  }
+  
+  .alert {
+    margin-top: 20px;
+  }
+  
