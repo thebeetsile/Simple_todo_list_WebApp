@@ -1,0 +1,28 @@
+GET /todolist HTTP/1.1
+Host: localhost:5000
+
+//Add new Task
+###
+POST /tasks HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+Content-Length: 71
+Cookie: connect.sid=s%3A3qU5l6u8zeCjR7V-5_W6Jb7zXp26weDC.d7aYntq3upIsGv1JxW18%2FfIzygPvaMvX8W6%2FnSPljIY
+
+{
+    "title": "Clean bathroom",
+    "description": "Scrub sink, toilet, and shower",
+    "completed": false
+}
+
+//Update Task
+###
+PUT /tasks/60997e85d0de802fd0f3dd1f HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+Content-Length: 44
+Cookie: connect.sid=s%3A3qU5l6u8zeCjR7V-5_W6Jb7zXp26weDC.d7aYntq3upIsGv1JxW18%2FfIzygPvaMvX8W6%2FnSPljIY
+
+{
+    "completed": false
+}
